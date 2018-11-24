@@ -11,6 +11,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import * as firebase from 'firebase';
+import Toast, {DURATION} from 'react-native-easy-toast'
 
 YellowBox.ignoreWarnings(['Setting a timer'])
 
@@ -51,8 +52,11 @@ export default class ValueScreen extends React.Component {
       .database()
       .ref('/user/1/')
       .update({
-        balance: this.state.newBalance
+        balance: this.state.balance + this.state.newBalance
       });
+      this.setState({
+        newBalance: 0
+      })
   };
 
   increase = () => {
@@ -75,16 +79,17 @@ export default class ValueScreen extends React.Component {
         <Text
           style={{
             fontSize: 55,
-            borderBottomColor: 'black',
-            borderBottomWidth: 2
+            borderBottomColor: '#4298f4',
+            borderBottomWidth: 2,
+            color: "#4298f4"
           }}>
           Your balance{'\n'}
         </Text>
-        <Text style={{ fontSize: 40, marginTop: 50 }}>
-          {this.state.balance}
+        <Text style={{ fontSize: 40, marginTop: 50, color: "#4298f4" }}>
+          {this.state.balance + "€"}
         </Text>
         <View style={{ width: 100, marginTop: 50, flexDirection: 'row', justifyContent: "space-around"}}>
-          <TouchableOpacity style={{alignContent: "center", backgroundColor: "#DDDDDD", padding: 10}} onPress={this.increase}>
+          <TouchableOpacity style={{alignContent: "center", backgroundColor: "#4298f4", padding: 10}} onPress={this.increase}>
             <Text>+</Text>
           </TouchableOpacity>
           <TextInput
@@ -93,14 +98,27 @@ export default class ValueScreen extends React.Component {
             keyboardType="numeric"
             style={{ borderBottomColor: 'black', borderBottomWidth: 2 }}
           />
-          <TouchableOpacity style={{alignContent: "center", backgroundColor: "#DDDDDD", padding: 10}} onPress={this.decrease}>
+          <TouchableOpacity style={{alignContent: "center", backgroundColor: "#4298f4", padding: 10}} onPress={this.decrease}>
           <Text>-</Text>
         </TouchableOpacity>
         </View>
-        <TouchableOpacity style={{alignItems: 'center', backgroundColor: "#DDDDDD", width: 100, padding: 10, marginTop: 50}} onPress={() => this.editValue()}>
-          <Text>Edit</Text>
+        <TouchableOpacity style={{alignItems: 'center', backgroundColor: "#4298f4", width: 100, padding: 10, marginTop: 50}} onPress={() => {
+          this.refs.toast.show('Payment confirmed!', 500, () => {
+            this.editValue();
+          });
+        }}>
+          <Text>Bank/Card</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{alignItems: 'center', backgroundColor: "#DDDDDD", width: 100, padding: 10, marginTop: 50}}><Text>MobilePay</Text></TouchableOpacity>
+        <TouchableOpacity style={{alignItems: 'center', backgroundColor: "#4298f4", width: 100, padding: 10, marginTop: 50}} onPress={() => {
+          this.refs.toast.show('Payment confirmed!', 500, () => {
+            this.editValue();
+          });
+        }}><Text>MobilePay</Text></TouchableOpacity>
+        <Toast 
+        ref="toast"
+        position="top"
+        style={{backgroundColor: "gray"}}
+        />
       </ScrollView>
     );
   }
