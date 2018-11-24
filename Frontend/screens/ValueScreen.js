@@ -59,18 +59,6 @@ export default class ValueScreen extends React.Component {
       })
   };
 
-  increase = () => {
-    this.setState({
-      newBalance: this.state.newBalance + 1
-    })
-  }
-
-  decrease = () => {
-    this.setState({
-      newBalance: this.state.newBalance - 1
-    })
-  }
-
   render() {
     return (
       <ScrollView
@@ -88,19 +76,13 @@ export default class ValueScreen extends React.Component {
         <Text style={{ fontSize: 40, marginTop: 50, color: "#4298f4" }}>
           {this.state.balance + "€"}
         </Text>
-        <View style={{ width: 100, marginTop: 50, flexDirection: 'row', justifyContent: "space-around"}}>
-          <TouchableOpacity style={{alignContent: "center", backgroundColor: "#4298f4", padding: 10}} onPress={this.increase}>
-            <Text>+</Text>
-          </TouchableOpacity>
+        <View style={{ width: 100, marginTop: 50, flexDirection: 'row', justifyContent: "center", alignItems: "center"}}>
           <TextInput
             onChangeText={newBalance => this.setState({ newBalance })}
             value={`${this.state.newBalance}`}
             keyboardType="numeric"
-            style={{ borderBottomColor: 'black', borderBottomWidth: 2 }}
+            style={{ borderBottomColor: 'black', borderBottomWidth: 2, textAlign: "center" }}
           />
-          <TouchableOpacity style={{alignContent: "center", backgroundColor: "#4298f4", padding: 10}} onPress={this.decrease}>
-          <Text>-</Text>
-        </TouchableOpacity>
         </View>
         <TouchableOpacity style={{alignItems: 'center', backgroundColor: "#4298f4", width: 100, padding: 10, marginTop: 50}} onPress={() => {
           this.refs.toast.show('Payment confirmed!', 500, () => {
