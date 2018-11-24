@@ -81,10 +81,10 @@ export default class MapScreen extends React.Component {
     }
   }
 
-  enstoAPI = () => {
+  enstoAPI = async () => {
     const username = 'junction';
     const pswd = 'junction2018';
-    fetch("https://junctionev.enstoflow.com/api/v1/chargingPointGroup", {
+    await fetch("https://junctionev.enstoflow.com/api/v1/chargingPointGroup", {
       method: 'GET',
       headers: new Headers({
         "Authorization": "Basic " + base64.encode(username+":"+pswd),
@@ -96,43 +96,38 @@ export default class MapScreen extends React.Component {
         console.log("Oops! Something went wrong!")
       }
       else
-        return response.json()
+      return response.json()
     })
     .then((responseJSON) => {
       /*for (var i = 0; i < responseJSON.length; i++) {
-        console.log(`chargingPointGroup id: ${responseJSON[i].id}`);
+      console.log(`chargingPointGroup id: ${responseJSON[i].id}`);
 
-        for (var j = 0; j < responseJSON[i].chargingPoints.length; j++) {
-          console.log(`  ${responseJSON[i].chargingPoints[j].chargePointVendor} ${responseJSON[i].chargingPoints[j].chargePointModel}`);
+      for (var j = 0; j < responseJSON[i].chargingPoints.length; j++) {
+      console.log(`  ${responseJSON[i].chargingPoints[j].chargePointVendor} ${responseJSON[i].chargingPoints[j].chargePointModel}`);
 
-          for (var k = 0; k < responseJSON[i].chargingPoints[j].connectors.length; k++) {
-            if (responseJSON[i].chargingPoints[j].connectors[k].id === 0) {
-              continue
-            }
-            console.log(`    connector: ${responseJSON[i].chargingPoints[j].connectors[k].id}, status: ${responseJSON[i].chargingPoints[j].connectors[k].status}`);
-          }
-        }
-        console.log('\n');
+      for (var k = 0; k < responseJSON[i].chargingPoints[j].connectors.length; k++) {
+      if (responseJSON[i].chargingPoints[j].connectors[k].id === 0) {
+      continue
+      }
+      console.log(`    connector: ${responseJSON[i].chargingPoints[j].connectors[k].id}, status: ${responseJSON[i].chargingPoints[j].connectors[k].status}`);
+      }
+      }
+      console.log('\n');
       }*/
       this.setState({
         ensto: JSON.stringify(responseJSON, null, 2)
       })
+      console.log('enstoAPI()');
     })
-    .then(this.test)
     .then(this.getChargingPointGroups);
   }
 
-  test = () => {
-    console.log(this.state.ensto);
-    console.log(testArray[1]['id'] == 1 ? "Yarp" : "Narp")
-  }
-
-  getChargingPointGroups() {
+  getChargingPointGroups = () => {
     return firebase.database().ref(`/chargingPointGroup`).once('value').then(function(snapshot) {
       this.setState({
         chargingPointGroups: snapshot
       });
-      console.log(" <!-- this.state.chargingPointGroups -->");
+      console.log('getChargingPointGroups()');
       console.log(this.state.chargingPointGroups);
     }.bind(this));
   }
@@ -140,14 +135,14 @@ export default class MapScreen extends React.Component {
   render() {
 
     const renderMarkers = info.map((info, index) =>
-      <MapView.Marker
-        key = {index}
-        title = {info.name}
-        description={info.status}
-        coordinate = {{
-          latitude: info.lat,
-          longitude: info.lon
-        }} />
+    <MapView.Marker
+      key = {index}
+      title = {info.name}
+      description={info.status}
+      coordinate = {{
+        latitude: info.lat,
+        longitude: info.lon
+      }} />
     )
 
     return (
@@ -175,18 +170,18 @@ export default class MapScreen extends React.Component {
       </KeyboardAvoidingView>
     );
   }
+}
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  map: {
+    flex: 0.8
+  },
+  search: {
+    flex: 0.2,
+    padding: 5
   }
-
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1
-    },
-    map: {
-      flex: 0.8
-    },
-    search: {
-      flex: 0.2,
-      padding: 5
-    }
-  });
+});
