@@ -52,7 +52,7 @@ export default class ValueScreen extends React.Component {
       .database()
       .ref('/user/1/')
       .update({
-        balance: this.state.balance + this.state.newBalance
+        balance: Number(this.state.balance) + Number(this.state.newBalance)
       });
       this.setState({
         newBalance: 0
