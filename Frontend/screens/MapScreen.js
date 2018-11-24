@@ -1,8 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button, KeyboardAvoidingView, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, KeyboardAvoidingView, Alert, YellowBox } from 'react-native';
 import { MapView, Location, Permissions } from 'expo';
 const key = 'AIzaSyB5LPlTnHClwSE8rXgznk6nuGxxBnAfu1M';
+import * as firebase from "firebase";
 
+YellowBox.ignoreWarnings(['Setting a timer']);
+const base64 = require('base-64');
 
 const info = [
   {
@@ -10,16 +13,16 @@ const info = [
     lat :60.1990,
     lon:24.9328,
     chargingPointGroup :[
-    {  id : "4",
-    chargePointVendor:"Ensto",
-    chargingPoint:[
-      {
-        id:"1",
-        status:"available"
+      {  id : "4",
+        chargePointVendor:"Ensto",
+        chargingPoint:[
+          {
+            id:"1",
+            status:"available"
+          }
+        ]
+
       }
-    ]
-    
-    }
     ],
 
     status:"available"
@@ -50,11 +53,15 @@ export default class MapScreen extends React.Component {
       markerTitle: '',
       markers: [],
       description:'boomboi',
+      chargingPointGroups: {},
+      ensto: []
     }
   }
 
   componentDidMount() {
     this.getLocation();
+    this.enstoAPI();
+    this.getChargingPointGroups();
   }
 
   getLocation = async () => {
@@ -66,7 +73,7 @@ export default class MapScreen extends React.Component {
       let location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
       this.setState({ location, latitude: location.coords.latitude, longitude: location.coords.longitude })
       this.getRestaurants();
-    
+
     }
   }
 
@@ -105,8 +112,58 @@ export default class MapScreen extends React.Component {
     })
   }
 
+  enstoAPI = () => {
+    const username = 'junction';
+    const pswd = 'junction2018';
+    fetch("https://junctionev.enstoflow.com/api/v1/chargingPointGroup", {
+      method: 'GET',
+      headers: new Headers({
+        "Authorization": "Basic " + base64.encode(username+":"+pswd),
+        "Content-Type": "application/json"
+      })
+    })
+    .then((response) => {
+      if (!response.ok) {
+        console.log("Oops! Something went wrong!")
+      }
+      else
+        return response.json()
+    })
+    .then((responseJSON) => {
+      for (var i = 0; i < responseJSON.length; i++) {
+        console.log(`chargingPointGroup/${responseJSON[i].id}`);
+
+        for (var j = 0; j < responseJSON[i].chargingPoints.length; j++) {
+          console.log(`- chargingPoint/${responseJSON[i].chargingPoints[j].chargePointVendor} ${responseJSON[i].chargingPoints[j].chargePointModel}`);
+
+          for (var k = 0; k < responseJSON[i].chargingPoints[j].connectors.length; k++) {
+            if (responseJSON[i].chargingPoints[j].connectors[k].id === 0) {
+              continue
+            }
+            console.log(`--- connector/${responseJSON[i].chargingPoints[j].connectors[k].id}`);
+            console.log(`--- connector status: ${responseJSON[i].chargingPoints[j].connectors[k].status}`);
+          }
+        }
+        console.log('\n');
+      }
+      this.setState({
+        ensto: JSON.stringify(responseJSON)
+      })
+    });
+  }
+
+  getChargingPointGroups() {
+    return firebase.database().ref(`/chargingPointGroup`).once('value').then(function(snapshot) {
+      this.setState({
+        chargingPointGroups: snapshot
+      });
+      console.log(" <!-- this.state.chargingPointGroups -->");
+      console.log(this.state.chargingPointGroups);
+    }.bind(this));
+  }
+
   render() {
-  
+
     const renderMarkers = info.map((info, index) =>
       <MapView.Marker
         key = {index}
