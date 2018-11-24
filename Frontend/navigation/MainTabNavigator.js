@@ -11,6 +11,7 @@ import ValueScreen from '../screens/ValueScreen';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
+  Charge:ChargeScreen,
 });
 
 HomeStack.navigationOptions = {
@@ -20,8 +21,8 @@ HomeStack.navigationOptions = {
       focused={focused}
       name={
         Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+          ? `ios-home${focused ? '' : '-outline'}`
+          : 'md-home'
       }
     />
   ),
@@ -72,5 +73,7 @@ export default createBottomTabNavigator({
   HomeStack,
   MapStack,
   ValueStack,
-  ChargeStack,
+ 
+  
 });
+
