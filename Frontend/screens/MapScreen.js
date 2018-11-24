@@ -30,13 +30,6 @@ const info = [
 
 ]
 
-
-
-
-
-
-
-
 export default class MapScreen extends React.Component {
   static navigationOptions = {
     title: 'Maps   ',
@@ -61,7 +54,6 @@ export default class MapScreen extends React.Component {
   componentDidMount() {
     this.getLocation();
     this.enstoAPI();
-    this.getChargingPointGroups();
   }
 
   getLocation = async () => {
@@ -72,44 +64,7 @@ export default class MapScreen extends React.Component {
     else {
       let location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
       this.setState({ location, latitude: location.coords.latitude, longitude: location.coords.longitude })
-      this.getRestaurants();
-
     }
-  }
-
-  getAddress = () => {
-    if (this.state.address.length < 1) { Alert.alert("Please type an address!"); return false }
-
-    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${this.state.address}&key=${key}`)
-    .then((response) => response.json())
-    .then((responseJson) => {
-      this.setState({latitude: responseJson.results[0].geometry.location.lat,
-        longitude: responseJson.results[0].geometry.location.lng,
-        latitudeDelta: 0.004757,
-        longitudeDelta: 0.006866,
-        markerTitle: responseJson.results[0].formatted_address});
-    })
-    .then(this.getRestaurants)
-    .catch((error) => {
-      Alert.alert(error);
-    });
-  }
-
-  getRestaurants = () => {
-    fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.state.latitude},${this.state.longitude}&radius=300&type=restaurants&key=${key}`)
-    .then((response) => response.json())
-    .then((responseJson) => {
-      let temp = [];
-      for (let i = 0; i < responseJson.results.length; i++) {
-        temp.push({
-          name: responseJson.results[i].name,
-          address: responseJson.results[i].vicinity,
-          latitude: responseJson.results[i].geometry.location.lat,
-          longitude: responseJson.results[i].geometry.location.lng
-        })
-        this.setState({markers: temp})
-      }
-    })
   }
 
   enstoAPI = () => {
@@ -130,26 +85,31 @@ export default class MapScreen extends React.Component {
         return response.json()
     })
     .then((responseJSON) => {
-      for (var i = 0; i < responseJSON.length; i++) {
-        console.log(`chargingPointGroup/${responseJSON[i].id}`);
+      /*for (var i = 0; i < responseJSON.length; i++) {
+        console.log(`chargingPointGroup id: ${responseJSON[i].id}`);
 
         for (var j = 0; j < responseJSON[i].chargingPoints.length; j++) {
-          console.log(`- chargingPoint/${responseJSON[i].chargingPoints[j].chargePointVendor} ${responseJSON[i].chargingPoints[j].chargePointModel}`);
+          console.log(`  ${responseJSON[i].chargingPoints[j].chargePointVendor} ${responseJSON[i].chargingPoints[j].chargePointModel}`);
 
           for (var k = 0; k < responseJSON[i].chargingPoints[j].connectors.length; k++) {
             if (responseJSON[i].chargingPoints[j].connectors[k].id === 0) {
               continue
             }
-            console.log(`--- connector/${responseJSON[i].chargingPoints[j].connectors[k].id}`);
-            console.log(`--- connector status: ${responseJSON[i].chargingPoints[j].connectors[k].status}`);
+            console.log(`    connector: ${responseJSON[i].chargingPoints[j].connectors[k].id}, status: ${responseJSON[i].chargingPoints[j].connectors[k].status}`);
           }
         }
         console.log('\n');
-      }
+      }*/
       this.setState({
-        ensto: JSON.stringify(responseJSON)
+        ensto: JSON.stringify(responseJSON, null, 2)
       })
-    });
+    })
+    .then(this.test)
+    .then(this.getChargingPointGroups);
+  }
+
+  test = () => {
+    console.log(this.state.ensto);
   }
 
   getChargingPointGroups() {
@@ -196,7 +156,6 @@ export default class MapScreen extends React.Component {
         <View style={styles.search}>
           <TextInput style={{fontSize: 18, height: 50}} value={this.state.address}
             onChangeText={(address) => this.setState({address})} />
-          <Button title='SHOW' onPress={this.getAddress}></Button>
         </View>
       </KeyboardAvoidingView>
     );
