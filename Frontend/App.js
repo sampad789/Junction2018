@@ -1,53 +1,12 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View, Text, YellowBox} from 'react-native';
+import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
-import * as firebase from "firebase";
-import _ from 'lodash';
-import firebase_config from "./constants/Firebase";
-
-const firebaseRef = firebase.initializeApp(firebase_config);
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.userRef = firebaseRef.database().ref('user/1');
-    this.userRef.on('value', (snapshot) => {
-      console.log(snapshot)
-      this.setState({
-        firstName: snapshot.val().firstName,
-        surname: snapshot.val().surname,
-        balance: snapshot.val().balance
-      })
-    });
-    this.state = {
-      firstName: '',
-      surname: '',
-      balance: 0,
-      isLoadingComplete: false
-    }
-  }
-
-  getUserInfo = () => {
-    return firebase.database().ref('/user/1').once('value').then(function(snapshot) {
-      this.setState({
-        firstName: snapshot.val().firstName,
-        surname: snapshot.val().surname,
-        balance: snapshot.val().balance
-      });
-    }.bind(this));
-  }
-
-  change = () => {
-    database.ref("/user/1/").update({
-      balance: 28
-    })
-    console.log("The value of balance for " + this.state.firstName + " is now 28")
-  }
- 
-  componentWillMount() {
-    this.getUserInfo();
-  }
+  state = {
+    isLoadingComplete: false,
+  };
 
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
