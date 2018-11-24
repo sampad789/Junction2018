@@ -30,6 +30,19 @@ const info = [
 
 ]
 
+const testArray = [{
+  id: 1,
+  name: "Dave"
+},
+{
+  id: 2,
+  name: "Vick"
+},
+{
+  id: 3,
+  name: "Tenno"
+}]
+
 export default class MapScreen extends React.Component {
   static navigationOptions = {
     title: 'Maps   ',
@@ -56,6 +69,7 @@ export default class MapScreen extends React.Component {
     this.enstoAPI();
   }
 
+  // Get current user co-ords
   getLocation = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
