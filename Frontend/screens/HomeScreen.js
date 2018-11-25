@@ -42,7 +42,7 @@ export default class HomeScreen extends React.Component {
       .ref('/user/1')
       .once('value')
       .then(
-        function(snapshot) {
+        function (snapshot) {
           this.setState({
             firstName: snapshot.val().firstName,
             surname: snapshot.val().surname,
@@ -82,9 +82,6 @@ export default class HomeScreen extends React.Component {
           </Text>
         </View>
         <View style={styles.empty}></View>
-        <View style={styles.onbutton}>
-          <Button onPress={() => navigate('Charge')} title='Charge' />
-        </View>
       </View>
     );
   }
@@ -154,7 +151,7 @@ const styles = StyleSheet.create({
   },
 
   empty: {
-    flex:.15,
+    flex: .15,
   }
 
 });

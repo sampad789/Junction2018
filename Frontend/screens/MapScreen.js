@@ -76,7 +76,7 @@ export default class MapScreen extends React.Component {
 
             for (var k = 0; k < responseJSON[i].chargingPoints[j].connectors.length; k++) {
               let tempConnector = {};
-              if (responseJSON[i].chargingPoints[j].connectors[k].id === 0) {
+              if (responseJSON[i].chargingPoints[j].connectors[k].connectorId === 0) {
                 continue
               }
               tempConnector.connectorId = responseJSON[i].chargingPoints[j].connectors[k].id;
@@ -117,7 +117,6 @@ export default class MapScreen extends React.Component {
     let result = '';
     for (var i = 0; i < chargingPointGroup.chargingPoints.length; i++) {
       for (var j = 0; j < chargingPointGroup.chargingPoints[i].connectors.length; j++) {
-        console.log(chargingPointGroup.chargingPoints[i].connectors[j].status);
         if (chargingPointGroup.chargingPoints[i].connectors[j].status == 'Available') {
           availableConnectors++;
         }
