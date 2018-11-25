@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, Button, KeyboardAvoidingView, Alert, YellowBox, FlatList } from 'react-native';
 import { MapView, Location, Permissions } from 'expo';
 import * as firebase from "firebase";
-const key = 'AIzaSyB5LPlTnHClwSE8rXgznk6nuGxxBnAfu1M';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 const base64 = require('base-64');
@@ -114,13 +113,23 @@ export default class MapScreen extends React.Component {
   }
 
   chargingPointMarkers = (chargingPointGroup) => {
-    <FlatList
-      data={chargingPointGroup.chargingPoints}
-      keyExtractor={item => item.id}
-      renderItem={({ item }) => <View style={{height: 50, width: 50}}>
-        <Text>{item.chargePointVendor} {item.chargePointModel}</Text>
-      </View>}>
-    </FlatList>
+    let availableConnectors = 0;
+    let result = '';
+    for (var i = 0; i < chargingPointGroup.chargingPoints.length; i++) {
+      for (var j = 0; j < chargingPointGroup.chargingPoints[i].connectors.length; j++) {
+        console.log(chargingPointGroup.chargingPoints[i].connectors[j].status);
+        if (chargingPointGroup.chargingPoints[i].connectors[j].status == 'Available') {
+          availableConnectors++;
+        }
+      }
+    }
+    if (availableConnectors === 1) {
+      result = '1 connector available';
+    }
+    else {
+      result = `${availableConnectors} connectors available`;
+    }
+    return result
   }
 
   render() {
@@ -136,14 +145,7 @@ export default class MapScreen extends React.Component {
           latitude: info.latitude,
           longitude: info.longitude
         }}
-        onCalloutPress={() => alert('Clicked')}
-        >
-        <MapView.Callout>
-          <View>
-              <Text>{info.address}</Text>
-          </View>
-        </MapView.Callout>
-      </MapView.Marker>
+      />
     )
 
     return (
