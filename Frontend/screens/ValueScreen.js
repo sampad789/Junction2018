@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Title,
@@ -11,7 +12,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import * as firebase from 'firebase';
-import Toast, {DURATION} from 'react-native-easy-toast'
+import Toast, { DURATION } from 'react-native-easy-toast'
 
 YellowBox.ignoreWarnings(['Setting a timer'])
 
@@ -54,53 +55,66 @@ export default class ValueScreen extends React.Component {
       .update({
         balance: Number(this.state.balance) + Number(this.state.newBalance)
       });
-      this.setState({
-        newBalance: 0
-      })
+    this.setState({
+      newBalance: 0
+    })
   };
 
   render() {
     return (
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{ alignItems: 'center' }}>
-        <Text
-          style={{
-            fontSize: 55,
-            borderBottomColor: '#4298f4',
-            borderBottomWidth: 2,
-            color: "#4298f4"
-          }}>
-          Your balance{'\n'}
-        </Text>
-        <Text style={{ fontSize: 55, marginTop: 50, color: "#4298f4" }}>
-          {this.state.balance + "€"}
-        </Text>
-        <View style={{ width: 300, marginTop: 50, flexDirection: 'row', justifyContent: "center", alignItems: "center"}}>
-          <TextInput
-            onChangeText={newBalance => this.setState({ newBalance })}
-            value={`${this.state.newBalance}`}
-            keyboardType="numeric"
-            style={{ fontSize: 50, borderColor: "#4298f4", borderWidth: 2, textAlign: "center", color: "#4298f4", minWidth: 100 }}
-          />
+      <ScrollView style={styles.container}>
+        <View style={styles.empty}></View>
+        <View style={styles.headerContainer}>
+          <Image source={require('../img/logo.png')} style={styles.logo} />
+          <Text style={styles.header}>
+            EV CHARGE
+          </Text>
         </View>
-        <TouchableOpacity style={{alignItems: 'center', backgroundColor: "#4298f4", width: 100, padding: 10, marginTop: 50}} onPress={() => {
-          this.refs.toast.show('Payment confirmed!', 500, () => {
-            this.editValue();
-          });
-        }}>
-          <Text>Bank/Card</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{alignItems: 'center', backgroundColor: "#4298f4", width: 100, padding: 10, marginTop: 50}} onPress={() => {
-          this.refs.toast.show('Payment confirmed!', 500, () => {
-            this.editValue();
-          });
-        }}><Text>MobilePay</Text></TouchableOpacity>
-        <Toast 
-        ref="toast"
-        position="top"
-        style={{backgroundColor: "gray"}}
-        />
+
+        <View style={styles.content}>
+
+          <Text style={styles.textMain}>
+            {"\n"}Your balance{'\n'}
+          </Text>
+          <View style={styles.line} />
+          <Text style={styles.textMain}>
+            {this.state.balance + "€"}{"\n"}
+          </Text>
+          <Text style={styles.textSecondary}>
+            {"\n"}{"\n"}Increase balance (€){'\n'}
+          </Text>
+          <View style={styles.line} />
+          <View style={styles.inputContainer}>
+            <TextInput
+              onChangeText={newBalance => this.setState({ newBalance })}
+              value={`${this.state.newBalance}`}
+              keyboardType="numeric"
+              style={styles.input}
+            />
+            <View style={styles.toastContainer}>
+              <TouchableOpacity style={styles.toast} onPress={() => {
+                this.refs.toast.show('Payment confirmed!', 500, () => {
+                  this.editValue();
+                  });
+                }}>
+                <Text style={styles.button}>Bank{"\n"}Card</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.toast} onPress={() => {
+                this.refs.toast.show('Payment confirmed!', 500, () => {
+                  this.editValue();
+                  });
+                }}>
+                <Text style={styles.button}>Mobile{"\n"}Pay</Text>
+              </TouchableOpacity>
+              <Toast
+                ref="toast"
+                position="top"
+                style={{ backgroundColor: "gray" }}
+              />
+            </View>
+          </View>
+        </View>
       </ScrollView>
     );
   }
@@ -109,8 +123,108 @@ export default class ValueScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff'
+  },
+
+  headerContainer: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
+
+  logo: {
+    resizeMode: 'contain',
+    flex: 5,
+    width: undefined,
+    height: undefined,
+    alignItems: 'flex-start',
+    alignContent: 'flex-start',
+  },
+
+  header: {
+    color: "#0989D1",
+    fontWeight: 'bold',
+    fontSize: 40,
+    textAlign: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    padding: .1,
+  },
+
+  content: {
+    backgroundColor: '#0989D1',
+    marginHorizontal: 10,
+    flex: 1.8,
     flexDirection: 'column',
     paddingTop: 15,
-    backgroundColor: '#fff'
+  },
+
+  textMain: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 35,
+    textAlign: 'center',
+    paddingTop: 5,
+    paddingBottom: 10,
+  },
+
+  textSecondary: {
+    color: '#fff',
+    fontSize: 30,
+    textAlign: 'center',
+    paddingTop: 5,
+  },
+
+  inputContainer: {
+    width: 300,
+    justifyContent: "space-around",
+    alignContent: "center",
+    alignItems: "center",
+    marginVertical: 20,
+    marginHorizontal: 30,
+  },
+
+  input: {
+    fontSize: 50,
+    backgroundColor: '#fff',
+    borderColor: "#04AEFB",
+    borderWidth: 2,
+    textAlign: "center",
+    color: "#4298f4",
+    minWidth: 260,
+    flex: 1,
+  },
+
+  button: {
+    fontSize: 20,
+    alignItems: 'center',
+    backgroundColor: "#F67C00",
+    color: '#fff',
+    borderColor: '#fff',
+    width: 100,
+    marginHorizontal: 10,
+    padding: 5,
+  },
+
+  toastContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    flex: 1,
+  },
+
+  toast: {
+    alignItems: 'center',
+    paddingVertical: 50,
+  },
+
+  line: {
+    borderBottomColor: '#fff',
+    borderBottomWidth: 1,
+    marginHorizontal: 20,
+  },
+
+  empty: {
+    flex: 2,
   }
 });
