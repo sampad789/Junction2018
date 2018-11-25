@@ -1,47 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button, KeyboardAvoidingView, Alert, YellowBox } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, KeyboardAvoidingView, Alert, YellowBox, FlatList } from 'react-native';
 import { MapView, Location, Permissions } from 'expo';
 import * as firebase from "firebase";
+const key = 'AIzaSyB5LPlTnHClwSE8rXgznk6nuGxxBnAfu1M';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 const base64 = require('base-64');
-
-const info = [
-  {
-    name: "pasila",
-    lat: 60.1990,
-    lon: 24.9328,
-    chargingPointGroup: [
-      {
-        id: "4",
-        chargePointVendor: "Ensto",
-        chargingPoint: [
-          {
-            id: "1",
-            status: "available"
-          }
-        ]
-
-      }
-    ],
-
-    status: "available"
-  }
-
-]
-
-const testArray = [{
-  id: 1,
-  name: "Dave"
-},
-{
-  id: 2,
-  name: "Vick"
-},
-{
-  id: 3,
-  name: "Tenno"
-}]
 
 export default class MapScreen extends React.Component {
   static navigationOptions = {
@@ -51,16 +15,15 @@ export default class MapScreen extends React.Component {
     super(props);
     this.state = {
       location: null,
-      address: '',
       latitude: 60.200692,
       longitude: 24.934302,
       latitudeDelta: 0.1,
       longitudeDelta: 0.1,
       markerTitle: '',
       markers: [],
-      description: 'boomboi',
       EVChargers: [],
       chargingPointGroups: [],
+      isReady: false
     }
   }
 
@@ -122,7 +85,7 @@ export default class MapScreen extends React.Component {
               tempChargingPointGroup.chargingPoints[j].connectors.push(tempConnector);
             }
           }
-          this.setState({EVChargers: [...this.state.EVChargers, tempChargingPointGroup]});
+          this.setState({ EVChargers: [...this.state.EVChargers, tempChargingPointGroup] });
         }
       })
       .then(this.getChargingPointGroups);
@@ -132,7 +95,7 @@ export default class MapScreen extends React.Component {
     let firebaseResult = [];
     let temp = this.state.EVChargers;
     let newArr = [];
-    
+
     return firebase.database().ref(`/chargingPointGroup`).once('value').then(function (snapshot) {
       for (let ele of snapshot.val()) {
         if (ele) {
@@ -140,27 +103,47 @@ export default class MapScreen extends React.Component {
         }
       }
 
-      firebaseResult.sort(function(a, b){return a.id - b.id});
-      temp.sort(function(a, b){return a.id - b.id});
+      firebaseResult.sort(function (a, b) { return a.id - b.id });
+      temp.sort(function (a, b) { return a.id - b.id });
 
       firebaseResult.forEach((itm, i) => {
         newArr.push(Object.assign({}, itm, temp[i]));
       });
-      this.setState({EVChargers: newArr});
+      this.setState({ EVChargers: newArr, isReady: true });
     }.bind(this));
   }
 
-  render() {
+  chargingPointMarkers = (chargingPointGroup) => {
+    <FlatList
+      data={chargingPointGroup.chargingPoints}
+      keyExtractor={item => item.id}
+      renderItem={({ item }) => <View style={{height: 50, width: 50}}>
+        <Text>{item.chargePointVendor} {item.chargePointModel}</Text>
+      </View>}>
+    </FlatList>
+  }
 
-    const renderMarkers = info.map((info, index) =>
+  render() {
+    if (!this.state.isReady) {
+      return <Expo.AppLoading />;
+    }
+    const renderMarkers = this.state.EVChargers.map((info, index) =>
       <MapView.Marker
         key={index}
-        title={info.name}
-        description={info.status}
+        title={info.address}
+        description={this.chargingPointMarkers(info)}
         coordinate={{
-          latitude: info.lat,
-          longitude: info.lon
-        }} />
+          latitude: info.latitude,
+          longitude: info.longitude
+        }}
+        onCalloutPress={() => alert('Clicked')}
+        >
+        <MapView.Callout>
+          <View>
+              <Text>{info.address}</Text>
+          </View>
+        </MapView.Callout>
+      </MapView.Marker>
     )
 
     return (
@@ -173,12 +156,6 @@ export default class MapScreen extends React.Component {
             latitudeDelta: this.state.latitudeDelta,
             longitudeDelta: this.state.longitudeDelta,
           }}>
-          <MapView.Marker
-            coordinate={{
-              latitude: this.state.latitude,
-              longitude: this.state.longitude
-            }}
-            title={this.state.markerTitle} />
           {renderMarkers}
         </MapView>
       </KeyboardAvoidingView>

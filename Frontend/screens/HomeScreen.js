@@ -23,7 +23,6 @@ export default class HomeScreen extends React.Component {
     super(props);
     this.userRef = firebaseRef.database().ref('user/1');
     this.userRef.on('value', snapshot => {
-      console.log(snapshot);
       this.setState({
         firstName: snapshot.val().firstName,
         surname: snapshot.val().surname,
@@ -51,15 +50,6 @@ export default class HomeScreen extends React.Component {
           });
         }.bind(this)
       );
-  };
-
-  change = () => {
-    database.ref('/user/1/').update({
-      balance: 28
-    });
-    console.log(
-      'The value of balance for ' + this.state.firstName + ' is now 28'
-    );
   };
 
   componentWillMount() {
