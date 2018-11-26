@@ -121,14 +121,14 @@ const styles = StyleSheet.create({
 
   text2Container: {
     backgroundColor: '#0989D1',
-    marginHorizontal: 10,
+    marginTop: 0,
+    marginBottom: 10,
     flex: 1.8,
   },
 
   textWelcome: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 35,
+    fontSize: 38,
     textAlign: 'center',
     paddingTop: 5,
     paddingBottom: 10,
@@ -136,7 +136,8 @@ const styles = StyleSheet.create({
 
   text2: {
     color: '#fff',
-    fontSize: 30,
+    fontWeight: 'bold',
+    fontSize: 32,
     textAlign: 'center',
     paddingTop: 5,
   },

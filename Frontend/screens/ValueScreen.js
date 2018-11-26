@@ -74,16 +74,17 @@ export default class ValueScreen extends React.Component {
         <View style={styles.content}>
 
           <Text style={styles.textMain}>
-            {"\n"}Your balance{'\n'}
+            {"\n"}Your balance
           </Text>
           <View style={styles.line} />
           <Text style={styles.textMain}>
             {this.state.balance + "€"}{"\n"}
           </Text>
           <Text style={styles.textSecondary}>
-            {"\n"}{"\n"}Increase balance (€){'\n'}
+            {"\n"}Increase balance (€){'\n'}
           </Text>
           <View style={styles.line} />
+
           <View style={styles.inputContainer}>
             <TextInput
               onChangeText={newBalance => this.setState({ newBalance })}
@@ -95,17 +96,17 @@ export default class ValueScreen extends React.Component {
               <TouchableOpacity style={styles.toast} onPress={() => {
                 this.refs.toast.show('Payment confirmed!', 500, () => {
                   this.editValue();
-                  });
-                }}>
-                <Text style={styles.button}>Bank{"\n"}Card</Text>
+                });
+              }}>
+                <Text style={styles.button}>Bank Card</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.toast} onPress={() => {
                 this.refs.toast.show('Payment confirmed!', 500, () => {
                   this.editValue();
-                  });
-                }}>
-                <Text style={styles.button}>Mobile{"\n"}Pay</Text>
+                });
+              }}>
+                <Text style={styles.button}>Mobile Pay</Text>
               </TouchableOpacity>
               <Toast
                 ref="toast"
@@ -132,12 +133,12 @@ const styles = StyleSheet.create({
   },
 
   logo: {
+    flex: 1,
+    width: 310,
+    height: 100,
     resizeMode: 'contain',
-    flex: 5,
-    width: undefined,
-    height: undefined,
-    alignItems: 'flex-start',
-    alignContent: 'flex-start',
+    marginTop: 15,
+    marginHorizontal: 40,
   },
 
   header: {
@@ -148,6 +149,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     flex: 1,
+    marginTop: -16,
     padding: .1,
   },
 
@@ -156,7 +158,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     flex: 1.8,
     flexDirection: 'column',
-    paddingTop: 15,
+    marginTop: 20,
+    paddingTop: 10,
   },
 
   textMain: {
@@ -176,8 +179,6 @@ const styles = StyleSheet.create({
   },
 
   inputContainer: {
-    width: 300,
-    justifyContent: "space-around",
     alignContent: "center",
     alignItems: "center",
     marginVertical: 20,
@@ -187,30 +188,34 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 50,
     backgroundColor: '#fff',
-    borderColor: "#04AEFB",
-    borderWidth: 2,
+    borderColor: "#696969",
+    borderWidth: 1,
     textAlign: "center",
     color: "#4298f4",
     minWidth: 260,
     flex: 1,
   },
 
-  button: {
-    fontSize: 20,
-    alignItems: 'center',
-    backgroundColor: "#F67C00",
-    color: '#fff',
-    borderColor: '#fff',
-    width: 100,
-    marginHorizontal: 10,
-    padding: 5,
-  },
-
   toastContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: -30,
     marginBottom: 10,
     flex: 1,
+  },
+
+  button: {
+    fontSize: 20,
+    textAlign: "center",
+    fontWeight: 'bold',
+    borderRadius: 10,
+    backgroundColor: "#F67C00",
+    color: '#fff',
+    borderWidth: .5,
+    borderColor: '#fff',
+    width: 140,
+    marginHorizontal: 10,
+    padding: 15,
   },
 
   toast: {
