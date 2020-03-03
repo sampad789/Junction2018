@@ -4,9 +4,12 @@
 This project (**EasyCharge9000**) was made for the Mobility track challange by [Entso](https://2018.hackjunction.com/challenges/teach-ev-chargers-new-tricks).
 EasyCharge9000 was developed on React Native, using the API provided by Entso, in addition to extra Firebase database created by us for demonstrational purpourses.<br /><br />
 
-## Demo: Home screen & Value screen
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="https://gyazo.com/636ffbd5ef157774ca40bfad76a5b8ce"><img src="https://i.gyazo.com/636ffbd5ef157774ca40bfad76a5b8ce.png" alt="Image from Gyazo" width="238"/></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="https://gyazo.com/76dcd7e06d72c26bc1d790854ecc0407"><img src="https://i.gyazo.com/76dcd7e06d72c26bc1d790854ecc0407.png" alt="Image from Gyazo" width="238"/></a>
+## Home screen & Value screen
+<a href="https://raw.githubusercontent.com/sampad789/Junction2018/master/screenshotHome.png"><img src="https://raw.githubusercontent.com/sampad789/Junction2018/master/screenshotHome.png" alt="Screenshot of EasyCharge9000 app home view" width="238"/></a>  <a href="https://raw.githubusercontent.com/sampad789/Junction2018/master/screenshotValue.png"><img src="https://raw.githubusercontent.com/sampad789/Junction2018/master/screenshotValue.png" alt="Screenshot of EasyCharge9000 app value view" width="238"/></a>
+
+## Design based on ENSTO Heat Control app
+<a href="https://raw.githubusercontent.com/sampad789/Junction2018/master/ENSTO_heat_control_app.jpeg"><img src="https://raw.githubusercontent.com/sampad789/Junction2018/master/ENSTO_heat_control_app.jpeg" alt="Screenshot of ENSTO heat control app" width="238"/></a>
+
 
 ## Team Members
 [Alex Jacobs](https://github.com/MaximumFluff)<br />
